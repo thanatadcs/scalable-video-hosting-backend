@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class S3Service {
 
-    private static S3Presigner presigner = S3Presigner.builder()
+    private S3Presigner presigner = S3Presigner.builder()
             .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
             .region(Region.AP_SOUTHEAST_1)
             .build();
@@ -29,7 +29,7 @@ public class S3Service {
      * <p>
      * Source: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/examples-s3-presign.html
      */
-    public static URL createPresignedUrl(String bucketName, String keyName, String contentType, Map<String, String> metadata) {
+    public URL createPresignedUrl(String bucketName, String keyName, String contentType, Map<String, String> metadata) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
