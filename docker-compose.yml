@@ -4,6 +4,7 @@ services:
     build: .
     depends_on:
       - db
+      - redis
     restart: always
     env_file:
       - s3.env
@@ -11,6 +12,7 @@ services:
       DB_USERNAME: user
       DB_PASSWORD: mysecret
       DB_HOST: db
+      REDIS_HOST: redis
   db:
     image: postgres:16
     environment:
@@ -26,3 +28,5 @@ services:
       - "8080:80"
     depends_on:
       - backend
+  redis:
+    image: redis:7

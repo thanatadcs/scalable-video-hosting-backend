@@ -1,15 +1,17 @@
 package com.example.tiktokbackend;
 
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 @Service
 public class TaskQueueService {
+
     private JedisPool jedisPool;
 
-    TaskQueueService() {
-        jedisPool = new JedisPool("localhost", 6379);
+    TaskQueueService(Environment env) {
+        jedisPool = new JedisPool(env.getProperty("jedis.host"), 6379);
     }
 
     void sendTask(String message) {

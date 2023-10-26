@@ -1,6 +1,5 @@
 package com.example.tiktokbackend;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
