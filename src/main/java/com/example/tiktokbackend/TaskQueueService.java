@@ -11,7 +11,7 @@ public class TaskQueueService {
     private JedisPool jedisPool;
 
     TaskQueueService(Environment env) {
-        jedisPool = new JedisPool(env.getProperty("jedis.host"), 6379);
+        jedisPool = new JedisPool(env.getProperty("redis.host"), 6379);
     }
 
     void sendTask(String message) {
