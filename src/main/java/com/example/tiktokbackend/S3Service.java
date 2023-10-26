@@ -29,7 +29,7 @@ public class S3Service {
      * <p>
      * Source: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/examples-s3-presign.html
      */
-    public URL createPresignedUrl(String bucketName, String keyName, String contentType, Map<String, String> metadata) {
+    public URL createPresignedUploadUrl(String bucketName, String keyName, String contentType, Map<String, String> metadata) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
