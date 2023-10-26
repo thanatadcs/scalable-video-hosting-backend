@@ -1,5 +1,6 @@
 package com.example.tiktokbackend;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +13,12 @@ public class UploadVideoController {
 
     private VideoRepository videoRepository;
 
-    UploadVideoController(VideoRepository videoRepository) {
+    private TaskQueueService taskQueueService;
+
+
+    UploadVideoController(VideoRepository videoRepository, TaskQueueService taskQueueService) {
         this.videoRepository = videoRepository;
+        this.taskQueueService = taskQueueService;
     }
 
     @CrossOrigin
@@ -30,6 +35,7 @@ public class UploadVideoController {
     ResponseEntity<Void> doneUpload(@RequestBody UploadTicket ticket) {
         Video newVideo = new Video(ticket.id(), "NONE");
         videoRepository.save(newVideo);
+        taskQueueService.sendTask(String.valueOf(ticket.id()));
         return ResponseEntity.ok().build();
     }
 }
