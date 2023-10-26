@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh">
+        <button id="getUploadUrlButton" style="margin-bottom: 50px">get upload url</button>
+        <input type="file" id="inputVideoFile" style="margin-bottom: 50px">
+        <button id="uploadFileButton" style="margin-bottom: 50px">upload</button>
+        <p id="uploadStatus"></p>
+        <p id="uploadNotifyStatus"></p>
+    </div>
+</body>
+<script>
+    let file;
+    let id;
+    let url;
+    let ticket;
+    const httpRequest = new XMLHttpRequest();
+
+    getUploadUrlButton.addEventListener("click", () => {
+        getUploadUrlButton.disabled = true;
+        getUploadUrlButton.innerText = "fetching";
+        httpRequest.onreadystatechange = responseHandler;
+        httpRequest.open("GET", "http://localhost:8080/api/upload/url");
+        httpRequest.send();
+
+        function responseHandler() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    ticket = JSON.parse(httpRequest.responseText);
+                    id = ticket["id"];
+                    url = ticket["url"];
+                    alert("Fetched Success, ticket id: " + id + ", url: " + url);
+                } else {
+                    alert("Failed to fetch");
+                }
+                getUploadUrlButton.disabled = false;
+                getUploadUrlButton.innerText = "get upload url";
+            }
+        }
+    });
+
+    inputVideoFile.addEventListener("change", async () => {
+        [file] = inputVideoFile.files;
+    })
+
+    uploadFileButton.addEventListener("click", () => {
+        disableButton();
+        if (ticket) {
+            httpRequest.onreadystatechange = responseHandler;
+            httpRequest.open("PUT", url);
+            httpRequest.send(file);
+        } else {
+            alert("No file or url");
+            enableButton();
+        }
+
+        function disableButton() {
+            uploadFileButton.disabled = true;
+            uploadFileButton.innerText = "uploading";
+        }
+
+        function responseHandler() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    uploadStatus.innerText = "Upload success!: " + url;
+                    notifyDoneUpload();
+                } else {
+                    uploadStatus.innerText = "Upload failed";
+                }
+                enableButton();
+                ticket = undefined;
+            }
+        }
+
+        function enableButton() {
+            uploadFileButton.disabled = false;
+            uploadFileButton.innerText = "upload";
+        }
+
+        function notifyDoneUpload() {
+            httpRequest.onreadystatechange = () => {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === 200) {
+                        uploadNotifyStatus.innerText = "Nofity Upload success!";
+                    } else {
+                        uploadNotifyStatus.innerText = "Failed to notify upload success";
+                    }
+                }
+            }
+            httpRequest.open("POST", "http://localhost:8080/api/upload/done");
+            httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+            httpRequest.send(JSON.stringify(ticket));
+        }
+    })
+</script>
+</html>
