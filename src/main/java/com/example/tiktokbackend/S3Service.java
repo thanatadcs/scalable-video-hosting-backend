@@ -13,10 +13,7 @@ import java.util.Map;
 
 public class S3Service {
 
-    private S3Presigner presigner = S3Presigner.builder()
-            .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
-            .region(Region.AP_SOUTHEAST_1)
-            .build();
+    private S3Presigner presigner = S3Presigner.create();
 
     /**
      * Create a presigned URL for uploading with a PUT request.
