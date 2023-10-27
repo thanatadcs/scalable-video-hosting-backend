@@ -16,7 +16,6 @@ public class Video {
     }
 
     public Video(Integer ticketNumber, String convertStatus) {
-        this.id = id;
         this.ticketNumber = ticketNumber;
         this.convertStatus = convertStatus;
     }
