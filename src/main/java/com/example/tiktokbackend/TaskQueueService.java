@@ -16,7 +16,7 @@ public class TaskQueueService {
 
     void sendTask(String message) {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.rpush("convert-queue", message);
+            jedis.rpush("convert", message);
         }
     }
 }
