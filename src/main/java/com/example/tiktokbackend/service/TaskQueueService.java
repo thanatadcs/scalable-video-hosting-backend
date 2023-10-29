@@ -1,4 +1,4 @@
-package com.example.tiktokbackend;
+package com.example.tiktokbackend.service;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class TaskQueueService {
         jedisPool = new JedisPool(env.getProperty("redis.host"), 6379);
     }
 
-    void sendTask(String message) {
+    public void sendTask(String message) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.rpush("convert", message);
         }

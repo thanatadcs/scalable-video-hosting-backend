@@ -1,4 +1,4 @@
-package com.example.tiktokbackend;
+package com.example.tiktokbackend.service;
 
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.regions.Region;

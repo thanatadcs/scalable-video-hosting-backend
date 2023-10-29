@@ -1,4 +1,4 @@
-package com.example.tiktokbackend;
+package com.example.tiktokbackend.domain;
 
 import jakarta.persistence.*;
 

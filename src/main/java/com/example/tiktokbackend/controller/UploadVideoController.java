@@ -1,5 +1,10 @@
-package com.example.tiktokbackend;
+package com.example.tiktokbackend.controller;
 
+import com.example.tiktokbackend.repository.VideoRepository;
+import com.example.tiktokbackend.domain.UploadTicket;
+import com.example.tiktokbackend.domain.Video;
+import com.example.tiktokbackend.service.S3Service;
+import com.example.tiktokbackend.service.TaskQueueService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
