@@ -1,11 +1,13 @@
 package com.example.tiktokbackend.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class VideoStatusUpdater implements ApplicationListener<ApplicationReadyEvent> {
 
     private TaskQueueService taskQueueService;
@@ -24,9 +26,9 @@ public class VideoStatusUpdater implements ApplicationListener<ApplicationReadyE
         while (true) {
             try {
                 String taskName = taskQueueService.getTask(QueueName);
-                System.out.println(taskName);
+                log.info(taskName);
             } catch (Exception e) {
-
+                log.error(e.getMessage());
             }
         }
     }
