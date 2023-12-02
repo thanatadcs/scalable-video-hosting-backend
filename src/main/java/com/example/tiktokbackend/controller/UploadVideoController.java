@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/upload")
@@ -28,18 +29,18 @@ public class UploadVideoController {
     @CrossOrigin
     @GetMapping("/url")
     ResponseEntity<UploadTicket> getUploadUrl(S3Service s3Service) {
-        int id = (int) (Math.random() * 100000000);
-        URL uploadUrl = s3Service.createPresignedUploadUrl(bucketName, id + "/original", null, null);
-        UploadTicket ticket = new UploadTicket(id, uploadUrl.toString());
+        String uuid = UUID.randomUUID().toString();
+        URL uploadUrl = s3Service.createPresignedUploadUrl(bucketName, uuid + "/original", null, null);
+        UploadTicket ticket = new UploadTicket(uuid, uploadUrl.toString());
         return ResponseEntity.ok(ticket);
     }
 
     @CrossOrigin
     @PostMapping("/done")
     ResponseEntity<Void> doneUpload(@RequestBody UploadTicket ticket) {
-        Video newVideo = new Video(ticket.id(), "NONE");
+        Video newVideo = new Video(ticket.uuid(), "NONE");
         videoRepository.save(newVideo);
-        taskQueueService.sendTask(String.valueOf(ticket.id()));
+        taskQueueService.sendTask(String.valueOf(ticket.uuid()));
         return ResponseEntity.ok().build();
     }
 }

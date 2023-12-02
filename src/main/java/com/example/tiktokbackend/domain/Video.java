@@ -9,14 +9,14 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    private Integer ticketNumber;
+    private String uuid;
     private String convertStatus;
 
     public Video() {
     }
 
-    public Video(Integer ticketNumber, String convertStatus) {
-        this.ticketNumber = ticketNumber;
+    public Video(String uuid, String convertStatus) {
+        this.uuid = uuid;
         this.convertStatus = convertStatus;
     }
 

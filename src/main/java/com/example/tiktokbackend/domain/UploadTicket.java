@@ -1,4 +1,4 @@
 package com.example.tiktokbackend.domain;
 
-public record UploadTicket(int id, String url) {
+public record UploadTicket(String uuid, String url) {
 }
