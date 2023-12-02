@@ -19,4 +19,10 @@ public class TaskQueueService {
             jedis.rpush("convert", message);
         }
     }
+
+    String getTask(String queueName) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.blpop(0, queueName).get(1);
+        }
+    }
 }
