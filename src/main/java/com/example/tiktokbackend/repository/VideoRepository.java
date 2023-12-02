@@ -4,4 +4,5 @@ import com.example.tiktokbackend.domain.Video;
 import org.springframework.data.repository.CrudRepository;
 
 public interface VideoRepository extends CrudRepository<Video, Integer> {
+    Video findByUuid(String uuid);
 }
