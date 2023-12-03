@@ -8,8 +8,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
+@Service
 public class VideoStatusUpdater implements ApplicationListener<ApplicationReadyEvent> {
 
     private VideoRepository videoRepository;

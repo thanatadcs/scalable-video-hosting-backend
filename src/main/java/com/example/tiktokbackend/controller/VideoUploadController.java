@@ -1,7 +1,7 @@
 package com.example.tiktokbackend.controller;
 
 import com.example.tiktokbackend.repository.VideoRepository;
-import com.example.tiktokbackend.domain.UploadTicket;
+import com.example.tiktokbackend.domain.VideoUploadTicket;
 import com.example.tiktokbackend.domain.Video;
 import com.example.tiktokbackend.service.S3Service;
 import com.example.tiktokbackend.service.TaskQueueService;
@@ -13,31 +13,31 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/upload")
-public class UploadVideoController {
-    final private String bucketName = "scalable-p2";
-
+public class VideoUploadController {
+    private String bucketName = "scalable-p2";
+    private S3Service s3Service;
     private VideoRepository videoRepository;
-
     private TaskQueueService taskQueueService;
 
 
-    UploadVideoController(VideoRepository videoRepository, TaskQueueService taskQueueService) {
+    VideoUploadController(VideoRepository videoRepository, TaskQueueService taskQueueService, S3Service s3Service) {
         this.videoRepository = videoRepository;
         this.taskQueueService = taskQueueService;
+        this.s3Service = s3Service;
     }
 
     @CrossOrigin
     @GetMapping("/url")
-    ResponseEntity<UploadTicket> getUploadUrl(S3Service s3Service) {
+    ResponseEntity<VideoUploadTicket> getUploadUrl() {
         String uuid = UUID.randomUUID().toString();
         URL uploadUrl = s3Service.createPresignedUploadUrl(bucketName, uuid + "/original", null, null);
-        UploadTicket ticket = new UploadTicket(uuid, uploadUrl.toString());
+        VideoUploadTicket ticket = new VideoUploadTicket(uuid, uploadUrl.toString());
         return ResponseEntity.ok(ticket);
     }
 
     @CrossOrigin
     @PostMapping("/done")
-    ResponseEntity<Void> doneUpload(@RequestBody UploadTicket ticket) {
+    ResponseEntity<Void> doneUpload(@RequestBody VideoUploadTicket ticket) {
         Video newVideo = new Video(ticket.uuid(), null, null, null);
         videoRepository.save(newVideo);
         taskQueueService.sendTask(String.valueOf(ticket.uuid()));
