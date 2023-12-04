@@ -26,7 +26,6 @@ public class VideoUploadController {
         this.s3Service = s3Service;
     }
 
-    @CrossOrigin
     @GetMapping("/url")
     ResponseEntity<VideoUploadTicket> getUploadUrl() {
         String uuid = UUID.randomUUID().toString();
@@ -35,7 +34,6 @@ public class VideoUploadController {
         return ResponseEntity.ok(ticket);
     }
 
-    @CrossOrigin
     @PostMapping("/done")
     ResponseEntity<Void> doneUpload(@RequestBody String uuid) {
         Video newVideo = new Video(uuid);

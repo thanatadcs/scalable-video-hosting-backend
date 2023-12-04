@@ -19,7 +19,6 @@ public class VideoController {
         this.s3Service = s3Service;
     }
 
-    @CrossOrigin
     @GetMapping("/{uuid}")
     public ResponseEntity<String> getVideo(@PathVariable String uuid) {
         try {
