@@ -23,7 +23,7 @@ public class Video {
     }
 
     public Video(String uuid) {
-        this(uuid, null, null, null, null);
+        this(uuid, "none", "none", "none", "none");
     }
 
     public Video(String uuid, String convertStatus, String thumbnailStatus, String chunkStatus, String readyStatus) {

@@ -39,6 +39,14 @@ public class VideoStatusUpdater implements ApplicationListener<ApplicationReadyE
                 if (taskName.equals("convert")) video.setConvertStatus(status);
                 else if (taskName.equals("thumbnail")) video.setThumbnailStatus(status);
                 else if (taskName.equals("chunk")) video.setChunkStatus(status);
+
+                if (video.getThumbnailStatus().equals("success") &&
+                        video.getChunkStatus().equals("success"))
+                    video.setReadyStatus("ready");
+                else if (video.getConvertStatus().equals("fail") ||
+                        video.getThumbnailStatus().equals("fail") ||
+                        video.getChunkStatus().equals("fail"))
+                    video.setReadyStatus("never"); // Need to clean video from S3
                 videoRepository.save(video);
             } catch (Exception e) {
                 log.error(e.getMessage());
