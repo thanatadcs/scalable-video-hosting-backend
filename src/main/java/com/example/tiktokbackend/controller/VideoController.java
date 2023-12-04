@@ -3,10 +3,7 @@ package com.example.tiktokbackend.controller;
 import com.example.tiktokbackend.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Scanner;
 
@@ -22,6 +19,7 @@ public class VideoController {
         this.s3Service = s3Service;
     }
 
+    @CrossOrigin
     @GetMapping("/{uuid}")
     public ResponseEntity<String> getVideo(@PathVariable String uuid) {
         try {
@@ -35,7 +33,7 @@ public class VideoController {
                     modifiedPlaylist.append(line);
                 } else {
                     String presignedChunk = s3Service.getPresignedUrl(bucketName,
-                            uuid + "/playlist/playlist" + index + ".ts").toString();
+                            uuid + "/playlist/playlist" + index++ + ".ts").toString();
                     modifiedPlaylist.append(presignedChunk);
                 }
                 modifiedPlaylist.append('\n');
