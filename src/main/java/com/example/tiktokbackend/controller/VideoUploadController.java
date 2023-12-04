@@ -19,7 +19,6 @@ public class VideoUploadController {
     private VideoRepository videoRepository;
     private TaskQueueService taskQueueService;
 
-
     VideoUploadController(VideoRepository videoRepository, TaskQueueService taskQueueService, S3Service s3Service) {
         this.videoRepository = videoRepository;
         this.taskQueueService = taskQueueService;

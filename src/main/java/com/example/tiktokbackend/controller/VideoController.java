@@ -15,8 +15,8 @@ import java.util.Scanner;
 @Slf4j
 public class VideoController {
 
-    private VideoRepository videoRepository;
     private String bucketName = "scalable-p2";
+    private VideoRepository videoRepository;
     private S3Service s3Service;
 
     VideoController(S3Service s3Service, VideoRepository videoRepository) {
@@ -37,7 +37,7 @@ public class VideoController {
                     modifiedPlaylist.append(line);
                 } else {
                     String presignedChunk = s3Service.getPresignedUrl(bucketName,
-                            uuid + "/playlist/playlist" + index++ + ".ts").toString();
+                            uuid + "/playlist/playlist" + index++ + ".ts", 15).toString();
                     modifiedPlaylist.append(presignedChunk);
                 }
                 modifiedPlaylist.append('\n');
@@ -52,7 +52,7 @@ public class VideoController {
     @GetMapping("/thumbnail/{uuid}")
     public ResponseEntity<String> getVideoThumbnailUrl(@PathVariable String uuid) {
         try {
-            String url = s3Service.getPresignedUrl(bucketName, uuid + "/" + "thumbnail.png").toString();
+            String url = s3Service.getPresignedUrl(bucketName, uuid + "/" + "thumbnail.png", 30).toString();
             return ResponseEntity.ok(url);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

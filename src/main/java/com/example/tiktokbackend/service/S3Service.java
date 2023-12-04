@@ -62,14 +62,14 @@ public class S3Service {
     /*
      * Source: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/examples-s3-presign.html
      */
-    public URL getPresignedUrl(String bucketName, String keyName) {
+    public URL getPresignedUrl(String bucketName, String keyName, int duration) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
                 .build();
 
         GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(60))
+                .signatureDuration(Duration.ofSeconds(duration))
                 .getObjectRequest(getObjectRequest)
                 .build();
 
