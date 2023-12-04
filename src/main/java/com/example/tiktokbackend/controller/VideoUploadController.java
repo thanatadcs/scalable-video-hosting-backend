@@ -37,10 +37,11 @@ public class VideoUploadController {
 
     @CrossOrigin
     @PostMapping("/done")
-    ResponseEntity<Void> doneUpload(@RequestBody VideoUploadTicket ticket) {
-        Video newVideo = new Video(ticket.uuid(), null, null, null);
+    ResponseEntity<Void> doneUpload(@RequestBody String uuid) {
+        Video newVideo = new Video(uuid);
         videoRepository.save(newVideo);
-        taskQueueService.sendTask(String.valueOf(ticket.uuid()));
+        taskQueueService.sendTask(String.valueOf(uuid));
         return ResponseEntity.ok().build();
     }
+
 }
