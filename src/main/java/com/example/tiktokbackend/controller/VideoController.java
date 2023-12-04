@@ -49,10 +49,24 @@ public class VideoController {
         }
     }
 
+    @GetMapping("/thumbnail/{uuid}")
+    public ResponseEntity<String> getVideoThumbnailUrl(@PathVariable String uuid) {
+        try {
+            String url = s3Service.getPresignedUrl(bucketName, uuid + "/" + "thumbnail.png").toString();
+            return ResponseEntity.ok(url);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/status-all")
     public ResponseEntity<List<Video>> getAllVideoStatus() {
-        List<Video> videos = videoRepository.findAll();
-        return ResponseEntity.ok(videos);
+        return ResponseEntity.ok(videoRepository.findAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Video>> getAllReadyVideo() {
+        return ResponseEntity.ok(videoRepository.findVideosByReadyStatus("ready"));
     }
 
 }

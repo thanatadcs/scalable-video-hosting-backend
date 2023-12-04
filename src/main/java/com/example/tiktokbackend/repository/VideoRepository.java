@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface VideoRepository extends ListCrudRepository<Video, Long> {
     Video findByUuid(String uuid);
+    List<Video> findVideosByReadyStatus(String readyStatus);
 }
