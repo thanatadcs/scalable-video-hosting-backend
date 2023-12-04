@@ -27,26 +27,31 @@ public class VideoController {
     @GetMapping("/{uuid}")
     public ResponseEntity<String> getVideo(@PathVariable String uuid) {
         try {
-            StringBuilder modifiedPlaylist = new StringBuilder();
             String videoPlaylist = s3Service.getObjectString(bucketName, uuid + "/playlist/playlist.m3u8");
-            Scanner scanner = new Scanner(videoPlaylist);
-            int index = 0;
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.charAt(0) == '#') {
-                    modifiedPlaylist.append(line);
-                } else {
-                    String presignedChunk = s3Service.getPresignedUrl(bucketName,
-                            uuid + "/playlist/playlist" + index++ + ".ts", 15).toString();
-                    modifiedPlaylist.append(presignedChunk);
-                }
-                modifiedPlaylist.append('\n');
-            }
-            return ResponseEntity.ok(modifiedPlaylist.toString());
+            String presignedPlaylist = createPresignedPlaylist(uuid, videoPlaylist);
+            return ResponseEntity.ok(presignedPlaylist);
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private String createPresignedPlaylist(String uuid, String videoPlaylist) {
+        StringBuilder modifiedPlaylist = new StringBuilder();
+        Scanner scanner = new Scanner(videoPlaylist);
+        int index = 0;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.charAt(0) == '#') {
+                modifiedPlaylist.append(line);
+            } else {
+                String presignedChunk = s3Service.getPresignedUrl(bucketName,
+                        uuid + "/playlist/playlist" + index++ + ".ts", 15).toString();
+                modifiedPlaylist.append(presignedChunk);
+            }
+            modifiedPlaylist.append('\n');
+        }
+        return modifiedPlaylist.toString();
     }
 
     @GetMapping("/thumbnail/{uuid}")
