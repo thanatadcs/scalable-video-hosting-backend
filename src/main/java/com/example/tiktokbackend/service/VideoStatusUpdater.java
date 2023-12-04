@@ -30,13 +30,15 @@ public class VideoStatusUpdater implements ApplicationListener<ApplicationReadyE
         while (true) {
             try {
                 String message = taskQueueService.getTask(QueueName);
+                // Message format: TaskName,UUID,status
                 String[] splitMessage = message.split(",");
                 String taskName = splitMessage[0];
                 String uuid = splitMessage[1];
+                String status = splitMessage[2];
                 Video video = videoRepository.findByUuid(uuid);
-                if (taskName.equals("convert")) video.setConvertStatus("done");
-                else if (taskName.equals("thumbnail")) video.setThumbnailStatus("done");
-                else if (taskName.equals("chunk")) video.setChunkStatus("done");
+                if (taskName.equals("convert")) video.setConvertStatus(status);
+                else if (taskName.equals("thumbnail")) video.setThumbnailStatus(status);
+                else if (taskName.equals("chunk")) video.setChunkStatus(status);
                 videoRepository.save(video);
             } catch (Exception e) {
                 log.error(e.getMessage());
