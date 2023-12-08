@@ -5,10 +5,12 @@ import com.example.tiktokbackend.domain.VideoUploadTicket;
 import com.example.tiktokbackend.domain.Video;
 import com.example.tiktokbackend.service.S3Service;
 import com.example.tiktokbackend.service.TaskQueueService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -34,10 +36,10 @@ public class VideoUploadController {
     }
 
     @PostMapping("/done")
-    ResponseEntity<Void> doneUpload(@RequestBody String uuid) {
-        Video newVideo = new Video(uuid);
-        videoRepository.save(newVideo);
-        taskQueueService.sendTask(String.valueOf(uuid));
+    ResponseEntity<Void> doneUpload(@RequestBody Map<String, String> videoProperties) {
+        Video video = new Video(videoProperties.get("uuid"), videoProperties.get("title"));
+        videoRepository.save(video);
+        taskQueueService.sendTask(video.getUuid());
         return ResponseEntity.ok().build();
     }
 
