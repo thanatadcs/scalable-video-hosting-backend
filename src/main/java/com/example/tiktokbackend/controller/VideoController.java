@@ -24,7 +24,7 @@ public class VideoController {
         this.videoRepository = videoRepository;
     }
 
-    @GetMapping("/{uuid}")
+    @GetMapping("/{uuid}/playlist.m3u8")
     public ResponseEntity<String> getVideo(@PathVariable String uuid) {
         try {
             String videoPlaylist = s3Service.getObjectString(bucketName, uuid + "/playlist/playlist.m3u8");
