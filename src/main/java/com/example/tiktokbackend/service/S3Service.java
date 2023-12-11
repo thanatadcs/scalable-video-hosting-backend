@@ -1,6 +1,7 @@
 package com.example.tiktokbackend.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -22,6 +23,9 @@ import java.util.Map;
 @Service
 public class S3Service {
 
+    @Value("${s3.bucket}")
+    private String bucketName;
+
     private S3Presigner presigner;
     private S3Client s3Client;
 
@@ -33,7 +37,6 @@ public class S3Service {
     /**
      * Create a presigned URL for uploading with a PUT request.
      *
-     * @param bucketName  - The name of the bucket.
      * @param keyName     - The name of the object.
      * @param contentType - The content type of the object.
      * @param metadata    - The metadata to store with the object.
@@ -41,7 +44,7 @@ public class S3Service {
      * <p>
      * Source: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/examples-s3-presign.html
      */
-    public URL createPresignedUploadUrl(String bucketName, String keyName, String contentType, Map<String, String> metadata) {
+    public URL createPresignedUploadUrl(String keyName, String contentType, Map<String, String> metadata) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
@@ -62,7 +65,7 @@ public class S3Service {
     /*
      * Source: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/examples-s3-presign.html
      */
-    public URL getPresignedUrl(String bucketName, String keyName, int duration) {
+    public URL getPresignedUrl(String keyName, int duration) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
@@ -80,7 +83,7 @@ public class S3Service {
     /*
      * Source: https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/javav2/example_code/s3/src/main/java/com/example/s3/GetObjectData.java#L66
      */
-    public String getObjectString(String bucketName, String keyName) {
+    public String getObjectString(String keyName) {
         GetObjectRequest objectRequest = GetObjectRequest
                 .builder()
                 .key(keyName)

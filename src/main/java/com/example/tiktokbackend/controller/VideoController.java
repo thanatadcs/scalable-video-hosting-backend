@@ -14,8 +14,6 @@ import java.util.Scanner;
 @RequestMapping("/api/video")
 @Slf4j
 public class VideoController {
-
-    private String bucketName = "scalable-p2";
     private VideoRepository videoRepository;
     private S3Service s3Service;
 
@@ -27,7 +25,7 @@ public class VideoController {
     @GetMapping("/{uuid}/playlist.m3u8")
     public ResponseEntity<String> getVideo(@PathVariable String uuid) {
         try {
-            String videoPlaylist = s3Service.getObjectString(bucketName, uuid + "/playlist/playlist.m3u8");
+            String videoPlaylist = s3Service.getObjectString(uuid + "/playlist/playlist.m3u8");
             String presignedPlaylist = createPresignedPlaylist(uuid, videoPlaylist);
             return ResponseEntity.ok(presignedPlaylist);
         } catch (Exception e) {
@@ -45,7 +43,7 @@ public class VideoController {
             if (line.charAt(0) == '#') {
                 modifiedPlaylist.append(line);
             } else {
-                String presignedChunk = s3Service.getPresignedUrl(bucketName,
+                String presignedChunk = s3Service.getPresignedUrl(
                         uuid + "/playlist/playlist" + index++ + ".ts", 15).toString();
                 modifiedPlaylist.append(presignedChunk);
             }
@@ -57,7 +55,7 @@ public class VideoController {
     @GetMapping("/thumbnail/{uuid}")
     public ResponseEntity<String> getVideoThumbnailUrl(@PathVariable String uuid) {
         try {
-            String url = s3Service.getPresignedUrl(bucketName, uuid + "/" + "thumbnail.png", 30).toString();
+            String url = s3Service.getPresignedUrl(uuid + "/" + "thumbnail.png", 30).toString();
             return ResponseEntity.ok(url);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

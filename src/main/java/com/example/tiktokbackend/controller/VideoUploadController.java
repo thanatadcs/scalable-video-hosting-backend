@@ -16,7 +16,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/upload")
 public class VideoUploadController {
-    private String bucketName = "scalable-p2";
     private S3Service s3Service;
     private VideoRepository videoRepository;
     private TaskQueueService taskQueueService;
@@ -30,7 +29,7 @@ public class VideoUploadController {
     @GetMapping("/url")
     ResponseEntity<VideoUploadTicket> getUploadUrl() {
         String uuid = UUID.randomUUID().toString();
-        URL uploadUrl = s3Service.createPresignedUploadUrl(bucketName, uuid + "/original", null, null);
+        URL uploadUrl = s3Service.createPresignedUploadUrl(uuid + "/original", null, null);
         VideoUploadTicket ticket = new VideoUploadTicket(uuid, uploadUrl.toString());
         return ResponseEntity.ok(ticket);
     }
